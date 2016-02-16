@@ -46,7 +46,7 @@ public class ApiJsonRoot {
      * color : blue
      */
 
-    private List<JobsEntity> jobs;
+    private List<JobEntity> jobs;
     /**
      * name : All
      * url : http://jenkins.xinpinget.com/
@@ -98,7 +98,7 @@ public class ApiJsonRoot {
         this.assignedLabels = assignedLabels;
     }
 
-    public void setJobs(List<JobsEntity> jobs) {
+    public void setJobs(List<JobEntity> jobs) {
         this.jobs = jobs;
     }
 
@@ -150,7 +150,7 @@ public class ApiJsonRoot {
         return assignedLabels;
     }
 
-    public List<JobsEntity> getJobs() {
+    public List<JobEntity> getJobs() {
         return jobs;
     }
 
@@ -182,7 +182,7 @@ public class ApiJsonRoot {
     public static class AssignedLabelsEntity {
     }
 
-    public static class JobsEntity {
+    public static class JobEntity {
         private String name;
         private String url;
         private String color;
