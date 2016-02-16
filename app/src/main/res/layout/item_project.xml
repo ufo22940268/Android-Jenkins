@@ -24,6 +24,10 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:text="@{job.name}"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/state"
+            android:layout_marginRight="16dp"
+            android:singleLine="true"
             />
 
         <com.xinpinget.android_jenkins.widget.LabelView

@@ -44,30 +44,30 @@ public class ConfigActivity extends AppCompatActivity {
 
     public void submit(View view) {
 //        String serverAddr = "http://jenkins.xinpinget.com/api/json";
-        String serverAddr = "http://jenkinsi.xinpinget.com/api/json";
-        new AsyncTask<String, Void, Response<ApiJsonRoot>>() {
-            @Override
-            protected Response<ApiJsonRoot> doInBackground(String... params) {
-                String serverAddr = params[0];
-                try {
-                    return ApiService.create(serverAddr).jenkins().list().execute();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Response<ApiJsonRoot> listResponse) {
-                super.onPostExecute(listResponse);
-                if (listResponse != null && listResponse.isSuccess()) {
-                    System.out.println("listResponse = " + listResponse);
-                } else {
-                    Snackbar.make(mForm, R.string.server_error, Snackbar.LENGTH_LONG).show();
-                }
-            }
-        }.execute(serverAddr);
+//        String serverAddr = "http://jenkins.xinpinget.com/api/json";
+//        new AsyncTask<String, Void, Response<ApiJsonRoot>>() {
+//            @Override
+//            protected Response<ApiJsonRoot> doInBackground(String... params) {
+//                String serverAddr = params[0];
+//                try {
+//                    return ApiService.create(serverAddr).jenkins().list().execute();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                return null;
+//            }
+//
+//            @Override
+//            protected void onPostExecute(Response<ApiJsonRoot> listResponse) {
+//                super.onPostExecute(listResponse);
+//                if (listResponse != null && listResponse.isSuccess()) {
+//                    System.out.println("listResponse = " + listResponse);
+//                } else {
+//                    Snackbar.make(mForm, R.string.server_error, Snackbar.LENGTH_LONG).show();
+//                }
+//            }
+//        }.execute(serverAddr);
     }
 }
 

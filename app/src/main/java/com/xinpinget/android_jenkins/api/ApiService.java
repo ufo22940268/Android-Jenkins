@@ -1,14 +1,12 @@
 package com.xinpinget.android_jenkins.api;
 
+
 import com.xinpinget.android_jenkins.domain.ApiJsonRoot;
 
-import java.util.List;
-
-import retrofit2.Call;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
-import retrofit2.http.Path;
 
 /**
  * Created by cc on 2/15/16.
@@ -24,6 +22,7 @@ public class ApiService {
         mRetrofit = new Retrofit.Builder()
                 .baseUrl(hostName)
                 .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
     }
 
@@ -40,6 +39,6 @@ public class ApiService {
 
     public interface Jenkins {
         @GET("/api/json")
-        Call<ApiJsonRoot> list();
+        rx.Observable<ApiJsonRoot> list();
     }
 }
