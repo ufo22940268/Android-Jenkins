@@ -14,4 +14,6 @@
         completions."
     </string>
     <string name="server_error">Server unreachable</string>
+    <string name="normal_state">Normal</string>
+    <string name="error_state">Error</string>
 </resources>

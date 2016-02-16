@@ -33,6 +33,13 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:textColor="@android:color/white"
+            style="@style/TextAppearance.AppCompat.Small"
+            android:textSize="12sp"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
             app:statusColor="@{job.color}"
             />
 
