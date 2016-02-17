@@ -17,5 +17,6 @@
     <string name="normal_state">Normal</string>
     <string name="error_state">Error</string>
     <string name="not_configured">Server not configured</string>
-    <string name="login">Login</string>
+    <string name="config">Config</string>
+    <string name="address_invalid">Address invalid(Must start with http or https)</string>
 </resources>

@@ -2,6 +2,7 @@ package com.xinpinget.android_jenkins;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -10,6 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -17,7 +20,7 @@ import com.xinpinget.android_jenkins.api.ApiService;
 import com.xinpinget.android_jenkins.databinding.ItemProjectBinding;
 import com.xinpinget.android_jenkins.domain.ApiJsonRoot;
 import com.xinpinget.android_jenkins.domain.ApiJsonRoot.JobEntity;
-import com.xinpinget.android_jenkins.util.JenkinManager;
+import com.xinpinget.android_jenkins.util.JenkinsManager;
 
 import java.util.List;
 
@@ -33,14 +36,14 @@ public class ProjectActivity extends AppCompatActivity implements SwipeRefreshLa
     private RecyclerView mRecycler;
     private SwipeRefreshLayout mSwipeView;
     private ProjectAdapter mAdapter;
-    private JenkinManager mJenkinManager;
+    private JenkinsManager mJenkinsManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_project);
 
-        mJenkinManager = new JenkinManager(this);
+        mJenkinsManager = new JenkinsManager(this);
 
         mSwipeView = (SwipeRefreshLayout) findViewById(R.id.swipe);
         mSwipeView.setOnRefreshListener(this);
@@ -59,14 +62,18 @@ public class ProjectActivity extends AppCompatActivity implements SwipeRefreshLa
         }
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        loadData();
+    }
 
     private boolean isLogin() {
-        return mJenkinManager.getServerAddr() != null;
+        return mJenkinsManager.getServerAddr() != null;
     }
 
     private void loadData() {
-        String serverAddr = mJenkinManager.getServerAddr();
-        showLoading(true);
+        String serverAddr = mJenkinsManager.getServerAddr();
         if (serverAddr != null) {
             ApiService.create(serverAddr).jenkins()
                     .list()
@@ -75,11 +82,13 @@ public class ProjectActivity extends AppCompatActivity implements SwipeRefreshLa
                     .subscribe(new Observer<ApiJsonRoot>() {
                         @Override
                         public void onCompleted() {
-                            showLoading(false);
+                            System.out.println("ProjectActivity.onCompleted");
+                            mSwipeView.setRefreshing(false);
                         }
 
                         @Override
                         public void onError(Throwable e) {
+                            mSwipeView.setRefreshing(false);
                             showLoginSnack(R.string.server_error);
                         }
 
@@ -93,10 +102,25 @@ public class ProjectActivity extends AppCompatActivity implements SwipeRefreshLa
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.project, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.config) {
+            startActivity(new Intent(this, ConfigActivity.class));
+            return true;
+        }
+        return false;
+    }
+
     private void showLoginSnack(int prompt) {
         //Show snake bar.
         Snackbar snackbar = Snackbar.make(findViewById(R.id.root), prompt, Snackbar.LENGTH_LONG);
-        snackbar.setAction(R.string.login, new View.OnClickListener() {
+        snackbar.setAction(R.string.config, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(ProjectActivity.this, ConfigActivity.class));
@@ -104,10 +128,6 @@ public class ProjectActivity extends AppCompatActivity implements SwipeRefreshLa
         });
         snackbar.setActionTextColor(getResources().getColor(R.color.login));
         snackbar.show();
-    }
-
-    private void showLoading(boolean show) {
-        mSwipeView.setRefreshing(show);
     }
 
     @Override
@@ -127,8 +147,14 @@ public class ProjectActivity extends AppCompatActivity implements SwipeRefreshLa
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            JobEntity jobEntity = mJobs.get(position);
+            final JobEntity jobEntity = mJobs.get(position);
             ((ItemProjectBinding) DataBindingUtil.bind(holder.itemView)).setJob(jobEntity);
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    v.getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(jobEntity.getUrl())));
+                }
+            });
         }
 
         @Override
